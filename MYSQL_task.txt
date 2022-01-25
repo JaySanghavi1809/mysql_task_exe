@@ -1,0 +1,90 @@
+MYSQL TASK:
+----------------------
+1.Write a query to create database and tables.
+
+2.Write a query to insert data
+
+3.Write a query to display of all student
+-> SELECT * FROM STUDENT
+
+4.Write a query for retrive of all student and sort in first name or any fields
+-> CHAR VALUE SORT-> SELECT * FROM `student` ORDER BY  Stud_FName ASC, Stud_LName DESC;
+
+ 5.Write a query for count of total student
+ ->SELECT COUNT(*) AS "Total Student" FROM student;
+
+ 6.Write a query to display the student's all details and department names of all student_data.
+-> SELECT s.ID, s.Stud_FName, s.Stud_MName,s.Stud_LName, s.Mobile_No, s.Department_ID, d.DName FROM student s INNER JOIN department d ON s.Department_ID = d.ID;
+
+7.write a query for find student which belongs to same city
+->SELECT * FROM student WHERE city = 'Mumbai';
+
+8.write a query for count of student with same department
+-> select d.DName, s.Department_ID, COUNT(*) from department d INNER join STUDENT S on S.Department_ID = d.ID group by d.DName order by Department_ID;
+
+9.write a query for retrive data like
+id student_full_name       DOB             Age   
+1  fname mname lname   01-01-2000   22    
+->SELECT concat(Stud_FName," ",Stud_MName," ",Stud_LName) AS "student_full_name",DOB,YEAR(CURDATE()) - YEAR(DOB) AS "age"   FROM student
+WHERE age > 15;
+
+
+10.write a query for display student list which age is greater than 15 
+->select distinct Stud_FName,Stud_MName, Stud_LName,Age from student where Age>15;
+
+
+
+11.  write a query 
+id         student_full_name         total_marks        percentage        result
+1          fname mname lname           150                     55%            pass/fail  
+ans:
+SELECT s.`ID`, CONCAT(s.`Stud_FName`, ' ', s.`Stud_MName`, ' ', s.`Stud_LName` ) AS student_full_name, (SELECT SUM(Sub_Marks) FROM marksheet WHERE Student_ID = s.ID) AS total_marks, (SELECT SUM(Sub_Marks)*100/500 FROM marksheet WHERE Student_ID = s.ID) AS percentage, (SELECT IF((SUM(Sub_Marks)*100/500) >= 40, 'pass','fail') FROM marksheet WHERE Student_ID = s.ID) AS result FROM `student` s;
+
+12.write a query for for retrieve above list order by percentage
+
+->SELECT s.`ID`, CONCAT(s.`Stud_FName`, ' ', s.`Stud_MName`, ' ', s.`Stud_LName` ) AS student_full_name, (SELECT SUM(Sub_Marks) FROM marksheet WHERE Student_ID = s.ID) AS total_marks, (SELECT SUM(Sub_Marks)*100/500 FROM marksheet WHERE Student_ID = s.ID) AS percentage, (SELECT IF((SUM(Sub_Marks)*100/500) >= 40, 'pass','fail') FROM marksheet WHERE Student_ID = s.ID) AS result FROM `student` s ORDER BY percentage desc;
+
+13.write a query for all student list with their all subject mark
+   id         student_full_name        sub1  sub2        sub3        sub4        total_marks        percentage        result
+   1          fname mname lname      10       20            60            0               90                     55%                         pass/fail 
+
+->SELECT s.`ID`, CONCAT(s.`Stud_FName`, ' ', s.`Stud_MName`, ' ', s.`Stud_LName` ) AS student_full_name, (SELECT Sub_Marks FROM marksheet WHERE Student_ID = s.ID AND Sub_ID =1) AS sub1, (SELECT Sub_Marks FROM marksheet WHERE Student_ID = s.ID AND Sub_ID =2) AS sub2, (SELECT Sub_Marks FROM marksheet WHERE Student_ID = s.ID AND Sub_ID =3) AS sub3, (SELECT Sub_Marks FROM marksheet WHERE Student_ID = s.ID AND Sub_ID =4) AS sub4, (SELECT Sub_Marks FROM marksheet WHERE Student_ID = s.ID AND Sub_ID =5) AS sub5, (SELECT SUM(Sub_Marks) FROM marksheet WHERE Student_ID = s.ID) AS total_marks, (SELECT SUM(Sub_Marks)*100/500 FROM marksheet WHERE Student_ID = s.ID) AS percentage, (SELECT IF((SUM(Sub_Marks)*100/500) >= 40, 'pass','fail') FROM marksheet WHERE Student_ID = s.ID) AS result FROM `student` s;
+
+
+14.write a query to display list in ascending and decending order by total marks:
+->SELECT s.`ID`, CONCAT(s.`Stud_FName`, ' ', s.`Stud_MName`, ' ', s.`Stud_LName` ) AS student_full_name, (SELECT Sub_Marks FROM marksheet WHERE Student_ID = s.ID AND Sub_ID =1) AS sub1, (SELECT Sub_Marks FROM marksheet WHERE Student_ID = s.ID AND Sub_ID =2) AS sub2, (SELECT Sub_Marks FROM marksheet WHERE Student_ID = s.ID AND Sub_ID =3) AS sub3, (SELECT Sub_Marks FROM marksheet WHERE Student_ID = s.ID AND Sub_ID =4) AS sub4, (SELECT Sub_Marks FROM marksheet WHERE Student_ID = s.ID AND Sub_ID =5) AS sub5, (SELECT SUM(Sub_Marks) FROM marksheet WHERE Student_ID = s.ID) AS total_marks, (SELECT SUM(Sub_Marks)*100/500 FROM marksheet WHERE Student_ID = s.ID) AS percentage, (SELECT IF((SUM(Sub_Marks)*100/500) >= 40, 'pass','fail') FROM marksheet WHERE Student_ID = s.ID) AS result FROM student s ORDER BY total_marks desc;
+
+15.write a query for search given string or word to all fields
+find word " test"
+->SELECT Stud_FName,Stud_MName,Stud_LName,Mobile_No FROM student WHERE CONCAT(Stud_FName, '', Stud_MName, '', Stud_LName) LIKE "%test%";
+
+16. write a query for search given string or word to all fields and decide order accoring to find out list
+    for example, given word found in 3 fields then its show first than same word found in 2 field than show in second
+
+->SELECT Stud_FName,Stud_MName,Stud_LName,Mobile_No,(IF(Stud_FName LIKE "%test%",1,0) + IF(Stud_MName LIKE "%test%",1,0) + IF(Stud_LName LIKE "%test%",1,0)) AS "Count" FROM student ORDER BY Count DESC;
+
+17.write a query for those student which list percentage between given range
+->
+SELECT s.`ID`, CONCAT(s.`Stud_FName`, ' ', s.`Stud_MName`, ' ', s.`Stud_LName` ) AS student_full_name, (SELECT Sub_Marks FROM marksheet WHERE Student_ID = s.ID AND Sub_ID =1) AS sub1, (SELECT Sub_Marks FROM marksheet WHERE Student_ID = s.ID AND Sub_ID =2) AS sub2, (SELECT Sub_Marks FROM marksheet WHERE Student_ID = s.ID AND Sub_ID =3) AS sub3, (SELECT Sub_Marks FROM marksheet WHERE Student_ID = s.ID AND Sub_ID =4) AS sub4, (SELECT Sub_Marks FROM marksheet WHERE Student_ID = s.ID AND Sub_ID =5) AS sub5, (SELECT SUM(Sub_Marks) FROM marksheet WHERE Student_ID = s.ID) AS total_marks, (SELECT SUM(Sub_Marks)*100/500 FROM marksheet WHERE Student_ID = s.ID) AS percentage, (SELECT IF((SUM(Sub_Marks)*100/500) >= 40, 'pass','fail') FROM marksheet WHERE Student_ID = s.ID) AS result, (SELECT SUM(Sub_Marks)*100/500 FROM marksheet WHERE Student_ID = s.ID HAVING percentage >= 40 AND percentage <= 60) AS per_range FROM student s;
+
+18.write a query for display first 5 student list which join date in given range
+->SELECT S.Stud_FName,S.Stud_LName,S.Join_Date FROM student S WHERE Join_Date BETWEEN '2015-03-01 00:00:00' AND '2018-03-18 12:00:00';
+
+SELECT * FROM student WHERE student.Join_Date BETWEEN '2015-01-01 00:00:00' AND '2018-09-18 12:00:00';
+
+19. write a query for find out student details which have max percentage.
+
+->SELECT s.`ID`, CONCAT(s.`Stud_FName`, ' ', s.`Stud_MName`, ' ', s.`Stud_LName` ) AS student_full_name, (SELECT SUM(Sub_Marks) FROM marksheet WHERE Student_ID = s.ID) AS total_marks, (SELECT SUM(Sub_Marks)*100/500 FROM marksheet WHERE Student_ID = s.ID) AS percentage, (SELECT IF((SUM(Sub_Marks)*100/500) >= 40, 'pass','fail') FROM marksheet WHERE Student_ID = s.ID) AS result FROM student s GROUP BY ID, percentage DESC LIMIT 0,2;
+
+20,write a query for below output
+student_id  total_student   result
+1,2,5            3           pass
+3,4              2          fail
+->
+
+SELECT 
+GROUP_CONCAT(s.ID) AS "Student_ID" ,
+ (SELECT IF((SUM(Sub_Marks)*100/500) >= 40, 'pass','fail') FROM marksheet WHERE Student_ID = s.ID) AS result,
+ COUNT(*) AS "COUNT"
+ FROM `student` s
+  GROUP BY RESULT;
